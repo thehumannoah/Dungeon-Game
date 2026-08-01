@@ -1,15 +1,8 @@
 import random as Rand
+import helper_functions as hf
+from config import SECTION_LENGTH, CENT
 
-SECTION_LENGTH = 25 # Must be odd
-CENT = SECTION_LENGTH // 2
-
-def room_gen(tilemap, y_loc, x_loc, y_len, x_len):
-    for i in range(y_loc, y_loc + y_len):
-        for j in range(x_loc, x_loc + x_len):
-            tilemap[i][j] = 1
-    
-    tilemap[y_loc][x_loc] = 2
-
+# Creates starting room based on template
 def start(tilemap, entrances):
     # Middle square
     with open("section_templates/start.txt", "r") as f:
@@ -19,11 +12,14 @@ def start(tilemap, entrances):
     
     entrances.update({'N': CENT, 'E': CENT, 'W': CENT})
 
+# Creates corridor room
 def corridor(tilemap, entrances):
-    hub_x = CENT #Rand.randint(CENT - 4, CENT + 4)
-    hub_y = CENT #Rand.randint(CENT - 4, CENT + 4)
-
+    hub_x = Rand.randint(3, SECTION_LENGTH - 4)
+    hub_y = Rand.randint(3, SECTION_LENGTH - 4)
+    
     tilemap[hub_y][hub_x] = 2
+    
+    valid_entrances = []
     
     for i in entrances:
         if entrances[i] != False:
@@ -34,10 +30,17 @@ def corridor(tilemap, entrances):
                 match i:
                     case 'N':
                         tilemap[0][entrances[i]] = 1
+                        valid_entrances.append([0, entrances[i]])
                     case 'E':
                         tilemap[entrances[i]][SECTION_LENGTH - 1] = 1
+                        valid_entrances.append([entrances[i], SECTION_LENGTH - 1])
                     case 'S':
                         tilemap[SECTION_LENGTH - 1][entrances[i]] = 1
+                        valid_entrances.append([SECTION_LENGTH - 1, entrances[i]])
                     case 'W':
                         tilemap[entrances[i]][0] = 1
+                        valid_entrances.append([entrances[i], 0])
     
+    for i in valid_entrances:
+        #hf.entrance_connect(tilemap, i, [hub_y, hub_x])
+        hf.sharp_connect(tilemap, i, [hub_y, hub_x])

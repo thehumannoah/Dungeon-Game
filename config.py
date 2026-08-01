@@ -1,0 +1,2 @@
+SECTION_LENGTH = 25 # Must be odd
+CENT = SECTION_LENGTH // 2

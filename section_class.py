@@ -10,14 +10,16 @@ Modes:
     7. Secret (good loot or lore)
 """
 
+import os
+import sys
+import random as Rand
 import mode_gen as mg
-SECTION_LENGTH = mg.SECTION_LENGTH
-CENT = SECTION_LENGTH // 2
+import helper_functions as hf
+from config import SECTION_LENGTH
 
 VALID_MODES = {
     "EMPTY",
     "START",
-    "INTERSECTION",
     "BOSS",
     "CORRIDOR",
     "DUNGEON",
@@ -51,8 +53,6 @@ class Section():
                 mg.start(self.tilemap, self.entrances)
             case "CORRIDOR":
                 mg.corridor(self.tilemap, self.entrances)
-            case "INTERSECTION":
-                pass
             case "BOSS":
                 pass
             case "DUNGEON":
@@ -90,26 +90,33 @@ class Section():
                     print(f"{RED}{cell}{RESET}", end="  ")
             print()
 
+def rn():
+    x = Rand.random()
+    if x <= .5:
+        return Rand.randint(3, SECTION_LENGTH - 4)
+    elif .5 < x <= .75:
+        return None
+    elif .75 < x <= 1.0:
+        return False
+
 if __name__ == "__main__":
-    
-    print("Select a mode:"
-        "\n\t1. room_gen"
-        "\n\t2. start"
-        "\n\t3. corridor")
-    choice = input()
-    print()
+    choice = sys.argv[1]
+    os.system("clear")
+    print(f"\033[1m{choice}\033[0m", "\n")
 
     match choice:
-        case "1":
+        case "block_gen":
             test = Section("EMPTY")
-            mg.room_gen(test.tilemap, 2, 2, 3, 3)
-        case "2":
+            hf.block_gen(test.tilemap, [int(sys.argv[2]), int(sys.argv[3])], [int(sys.argv[4]), int(sys.argv[5])])
+        case "empty":
+            test = Section("EMPTY")
+        case "start":
             test = Section("START")
-        case "3":
-            test = Section("CORRIDOR", {'N': CENT, 'E': False, 'S': CENT, 'W': False})
+        case "corridor":
+            test = Section("CORRIDOR", {'N': rn(), 'E': rn(), 'S': rn(), 'W': rn()})
         case _:
             print("command not found.")
             exit()
-    
+
     test.print_grid()
-    print("\n", test.entrances, "\n")
+    print("\n", test.entrances)
