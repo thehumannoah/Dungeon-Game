@@ -8,10 +8,9 @@ Rather than relying on a game engine, the goal is to implement the core systems 
 Currently, the game is in early development stages
 
 ### Implemented features:
-- Basic Pygame loop
+- Basic Pygame loop with movable player and collision detection
 - Tilemap based room representation
-- Configurable room generation modes
-- Initial room generation templates
+- Configurable room generation modes and templates
 #### Current room types include:
 - Start Room
 - Corridor
@@ -19,7 +18,6 @@ Currently, the game is in early development stages
   - Dungeon Rooms
   - Boss Rooms
   - Secret Rooms
-  - Intersections
 
 ## Planned Features
 
