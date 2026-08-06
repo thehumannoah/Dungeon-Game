@@ -1,11 +1,11 @@
 import random as Rand
-import helper_functions as hf
+from generation import gen_utils as gu
 from config import SECTION_LENGTH, CENT
 
 # Creates starting room based on template
 def start(tilemap, entrances):
     # Middle square
-    with open("section_templates/start.txt", "r") as f:
+    with open("generation/section_templates/start.txt", "r") as f:
         file_text = f.read().split()
         for i in range(len(file_text)):
             tilemap[i] = [int(c) for c in file_text[i]]
@@ -40,7 +40,9 @@ def corridor(tilemap, entrances):
                     case 'W':
                         tilemap[entrances[i]][0] = 1
                         valid_entrances.append([entrances[i], 0])
+            else:
+                entrances[i] = False
     
     for i in valid_entrances:
-        #hf.entrance_connect(tilemap, i, [hub_y, hub_x])
-        hf.sharp_connect(tilemap, i, [hub_y, hub_x])
+        #gu.entrance_connect(tilemap, i, [hub_y, hub_x])
+        gu.sharp_connect(tilemap, i, [hub_y, hub_x])

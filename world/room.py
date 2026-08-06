@@ -3,7 +3,6 @@ Defines Section class which is assigned to each new section entered by player
 Modes:
     1. Empty
     2. Start
-    3. Intersection
     4. Boss
     5. Corridor
     6. Dungeon (enemies and loot)
@@ -13,8 +12,8 @@ Modes:
 import os
 import sys
 import random as Rand
-import mode_gen as mg
-import helper_functions as hf
+from generation import room_gen as rg
+from generation import gen_utils as gu
 from config import SECTION_LENGTH
 
 VALID_MODES = {
@@ -26,7 +25,7 @@ VALID_MODES = {
     "SECRET"
 }
 
-class Section():
+class Room():
     def __init__(self, mode = "EMPTY", entrances = None):
         """
         Sets Section variables and creates tilemap.
@@ -50,9 +49,9 @@ class Section():
             case "EMPTY":
                 pass
             case "START":
-                mg.start(self.tilemap, self.entrances)
+                rg.start(self.tilemap, self.entrances)
             case "CORRIDOR":
-                mg.corridor(self.tilemap, self.entrances)
+                rg.corridor(self.tilemap, self.entrances)
             case "BOSS":
                 pass
             case "DUNGEON":
@@ -106,14 +105,14 @@ if __name__ == "__main__":
 
     match choice:
         case "block_gen":
-            test = Section("EMPTY")
-            hf.block_gen(test.tilemap, [int(sys.argv[2]), int(sys.argv[3])], [int(sys.argv[4]), int(sys.argv[5])])
+            test = Room("EMPTY")
+            gu.block_gen(test.tilemap, [int(sys.argv[2]), int(sys.argv[3])], [int(sys.argv[4]), int(sys.argv[5])])
         case "empty":
-            test = Section("EMPTY")
+            test = Room("EMPTY")
         case "start":
-            test = Section("START")
+            test = Room("START")
         case "corridor":
-            test = Section("CORRIDOR", {'N': rn(), 'E': rn(), 'S': rn(), 'W': rn()})
+            test = Room("CORRIDOR", {'N': rn(), 'E': rn(), 'S': rn(), 'W': rn()})
         case _:
             print("command not found.")
             exit()

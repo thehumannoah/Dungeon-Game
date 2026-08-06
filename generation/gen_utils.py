@@ -82,12 +82,6 @@ def sharp_connect(tilemap, start, end):
     
     carve_radius(tilemap, end_y, end_x)
     
-    for i in range(4):
-        for i in range(3, SECTION_LENGTH - 4, 1):
-            for j in range(3, SECTION_LENGTH - 4, 1):
-                adjacent = []
-                if tilemap[i+1][j] == 1: adjacent.append(1)
-                if tilemap[i-1][j] == 1: adjacent.append(1)
-                if tilemap[i][j+1] == 1: adjacent.append(1)
-                if tilemap[i][j-1] == 1: adjacent.append(1)
-                if len(adjacent) == 3: tilemap[i][j] = 1
+    for i in range(3, SECTION_LENGTH - 4, 1):
+        for j in range(3, SECTION_LENGTH - 4, 1):
+            if (tilemap[i+1][j] == 1 and tilemap [i-1][j] == 1) or (tilemap[i][j+1] == 1 and tilemap [i][j-1] == 1): tilemap[i][j] = 1
