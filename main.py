@@ -25,7 +25,12 @@ def tilemap_collision(player_rect, tilemap):
     right = (player_rect.right - 1) // TILE_SIZE
     top = player_rect.top // TILE_SIZE
     bottom = (player_rect.bottom - 1) // TILE_SIZE
-
+    
+    if top < 0: return True
+    if right > SECTION_LENGTH-1: return True
+    if bottom > SECTION_LENGTH-1: return True
+    if left < 0: return True
+    
     return (
         tilemap[top][left] == 0 or
         tilemap[top][right] == 0 or
@@ -35,7 +40,7 @@ def tilemap_collision(player_rect, tilemap):
 
 pygame.init()
 
-# Background
+# Screen
 pygame.display.set_caption('Dungeon Game')
 screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
 clock = pygame.time.Clock()
@@ -46,7 +51,10 @@ player = entities.Player(pygame.Surface((TILE_SIZE, TILE_SIZE)),
                     )
 player.surface.fill(RED)
 
-# Start Room
+# Current tile text display
+font = pygame.font.Font(None, 32)
+
+# Start Room generation
 start = room.Room(mode = "START")
 active_room = start
 
@@ -82,13 +90,20 @@ while running:
             player.rect.x += -1 if move_x > 0 else 1
     
     for i in range(abs(int(move_y))):
-            player.rect.y += 1 if move_y > 0 else -1
-            
-            if tilemap_collision(player.rect, active_room.tilemap):
-                player.rect.y += -1 if move_y > 0 else 1
+        player.rect.y += 1 if move_y > 0 else -1
+        
+        if tilemap_collision(player.rect, active_room.tilemap):
+            player.rect.y += -1 if move_y > 0 else 1
+    
+    player.tile_x = player.rect.x // TILE_SIZE
+    player.tile_y = player.rect.y // TILE_SIZE
     
     render_tilemap(active_room)
     screen.blit(player.surface, player.rect)
     
+    text = font.render(f"({player.tile_x}, {player.tile_y})", True, (255, 255, 255))
+    screen.blit(text, (32, 32))
+    
     pygame.display.update()
     clock.tick(60)
+pygame.quit()
