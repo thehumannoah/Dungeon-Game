@@ -12,7 +12,7 @@ Modes:
 import os
 import sys
 import random as Rand
-from generation import room_gen as rg
+from generation import room_mode_gen as rg
 from generation import gen_utils as gu
 from config import SECTION_LENGTH
 
@@ -26,7 +26,7 @@ VALID_MODES = {
 }
 
 class Room():
-    def __init__(self, mode = "EMPTY", entrances = None):
+    def __init__(self, position, mode = "EMPTY", entrances = None):
         """
         Sets Section variables and creates tilemap.
         Holds all info on a section.
@@ -36,6 +36,7 @@ class Room():
             raise ValueError(f"Unknown section mode: {mode}")
         
         # Set self variables
+        self.position = position
         self.mode = mode
         self.tilemap = [[0] * SECTION_LENGTH for _ in range(SECTION_LENGTH)]
         
@@ -105,14 +106,14 @@ if __name__ == "__main__":
 
     match choice:
         case "block_gen":
-            test = Room("EMPTY")
+            test = Room((0,0), "EMPTY")
             gu.block_gen(test.tilemap, [int(sys.argv[2]), int(sys.argv[3])], [int(sys.argv[4]), int(sys.argv[5])])
         case "empty":
-            test = Room("EMPTY")
+            test = Room((0,0), "EMPTY")
         case "start":
-            test = Room("START")
+            test = Room((0,0), "START")
         case "corridor":
-            test = Room("CORRIDOR", {'N': rn(), 'E': rn(), 'S': rn(), 'W': rn()})
+            test = Room((0,0), "CORRIDOR", {'N': rn(), 'E': rn(), 'S': rn(), 'W': rn()})
         case _:
             print("command not found.")
             exit()

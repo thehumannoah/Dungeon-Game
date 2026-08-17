@@ -1,4 +1,4 @@
-SECTION_LENGTH = 25 # Must be odd
+SECTION_LENGTH = 25 # Must be odd, subtract 1 when referencing tilemap list
 CENT = SECTION_LENGTH // 2
 
 TILE_SIZE = 32

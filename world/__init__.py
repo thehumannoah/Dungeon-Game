@@ -1,1 +1,1 @@
-__all__ = ["entities", "room"]
+__all__ = ["entities", "room", "grid"]

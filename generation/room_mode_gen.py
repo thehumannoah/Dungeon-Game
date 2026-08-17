@@ -17,7 +17,7 @@ def corridor(tilemap, entrances):
     hub_x = Rand.randint(3, SECTION_LENGTH - 4)
     hub_y = Rand.randint(3, SECTION_LENGTH - 4)
     
-    tilemap[hub_y][hub_x] = 2
+    tilemap[hub_y][hub_x]
     
     valid_entrances = []
     
