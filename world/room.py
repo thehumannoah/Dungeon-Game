@@ -19,9 +19,10 @@ from config import SECTION_LENGTH
 VALID_MODES = {
     "EMPTY",
     "START",
-    "BOSS",
     "CORRIDOR",
+    "DEADEND",
     "DUNGEON",
+    "BOSS",
     "SECRET"
 }
 
@@ -53,6 +54,10 @@ class Room():
                 rg.start(self.tilemap, self.entrances)
             case "CORRIDOR":
                 rg.corridor(self.tilemap, self.entrances)
+                c = 0
+                for i in self.entrances:
+                    if i is False: c += 1
+                if c == 3: self.mode = "DEADEND"
             case "BOSS":
                 pass
             case "DUNGEON":
@@ -92,11 +97,9 @@ class Room():
 
 def rn():
     x = Rand.random()
-    if x <= .5:
+    if x <= .6:
         return Rand.randint(3, SECTION_LENGTH - 4)
-    elif .5 < x <= .75:
-        return None
-    elif .75 < x <= 1.0:
+    else:
         return False
 
 if __name__ == "__main__":

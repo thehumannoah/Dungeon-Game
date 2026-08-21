@@ -34,9 +34,11 @@ player.surface.fill(RED)
 
 # Grid and Start Room generation
 start = room.Room((0,0), "START")
+active_room = start
+
 main_grid = grid.Grid()
 main_grid.rooms[(0,0)] = start
-active_room = start
+main_grid.minimap[(0,0)] = [[0, 1, 0], [1, 1, 1], [0, 0, 0]]
 
 # Current tile text display
 font = pygame.font.Font(None, 32)
@@ -70,20 +72,20 @@ def tilemap_collision(player, room):
         room.tilemap[bottom][right] == 0
     )
 
-def room_transfer(player, room):
+def room_transfer(player, curr_room):
     left = player.rect.left // TILE_SIZE
     right = (player.rect.right - 1) // TILE_SIZE
     top = player.rect.top // TILE_SIZE
     bottom = (player.rect.bottom - 1) // TILE_SIZE
     
     if top < 0:
-        return new_room(player, room, 'N')
+        return new_room(player, curr_room, 'N')
     if right > SECTION_LENGTH-1:
-        return new_room(player, room, 'E')
+        return new_room(player, curr_room, 'E')
     if bottom > SECTION_LENGTH-1:
-        return new_room(player, room, 'S')
+        return new_room(player, curr_room, 'S')
     if left < 0:
-        return new_room(player, room, 'W')
+        return new_room(player, curr_room, 'W')
     
     return False
 
@@ -117,7 +119,7 @@ def new_room(player, curr_room, direction = str):
             if curr_room.tilemap[SECTION_LENGTH-1][player.tile_x - 1] == 0:
                 n_ent += 1
             elif curr_room.tilemap[SECTION_LENGTH-1][player.tile_x + 1] == 0:
-                n_ent -= 1 
+                n_ent -= 1
         case 'W':
             grid_x -= 1
             e_ent = player.tile_y
@@ -125,11 +127,13 @@ def new_room(player, curr_room, direction = str):
                 e_ent += 1
             elif curr_room.tilemap[player.tile_y + 1][0] == 0:
                 e_ent -= 1
+        case _:
+            raise ValueError(direction)
     
     if (grid_x, grid_y) in main_grid.rooms:
         return main_grid.rooms[grid_x, grid_y]
     else:
-        new_room = main_grid.generate_room((grid_x, grid_y),
+        new_room = main_grid.generate_corridor_room((grid_x, grid_y),
                                             "CORRIDOR",
                                             {'N': n_ent, 'E': e_ent, 'S': s_ent, 'W': w_ent})
         return new_room
